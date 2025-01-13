@@ -83,3 +83,14 @@ nowcast <- epinowcast(data = pobs,
   model = model
 )
 ```
+Summarize nowcast
+```{r}
+nowcast |> summary(probs = c(0.05, 0.95)) |> head(n = 10)
+plot(nowcast, latest_obs = latest_germany_hosp)
+```
+Access the cmdstan object 
+```{r}
+cmdstan_obj <- nowcast$fit[[1]]
+
+test_draws <- cmdstan_obj |> tidybayes::spread_draws(r[t])
+```
