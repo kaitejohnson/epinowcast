@@ -183,6 +183,11 @@ epinowcast <- function(data,
     }
     return(init_inner_fn)
   }
+  
+  data_as_list <- c(
+    data_as_list,
+    log_genomes_per_case = 7
+  )
 
   fit <- do.call(
     fit$sampler, c(

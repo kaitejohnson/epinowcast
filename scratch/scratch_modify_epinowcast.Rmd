@@ -91,6 +91,9 @@ plot(nowcast, latest_obs = latest_germany_hosp)
 Access the cmdstan object 
 ```{r}
 cmdstan_obj <- nowcast$fit[[1]]
-
-test_draws <- cmdstan_obj |> tidybayes::spread_draws(r[t])
+test_ww_draws <- cmdstan_obj |> tidybayes::spread_draws(exp_lww_conc[t][g])
 ```
+This produces basically a estimate of logged cases over time, grouped by
+in this case the report date (I believe). I am not sure if the "grouping" here
+could be easily swapped out for a different grouping e.g. location. Maybe
+default grouping is by report date but option to add on additional groupings?

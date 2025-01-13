@@ -78,6 +78,9 @@ data {
   matrix[expl_fnindex, expl_fncol] expl_fdesign;
   matrix[expl_fncol, expl_rncol + 1] expl_rdesign;
   array[2, 1] real expl_beta_sd_p;
+  
+  // Model for latent case to wastewater concentration 
+  real log_genomes_per_case;
 
   // Reference time model
   // Parametric reference model
@@ -212,6 +215,9 @@ transformed parameters{
   vector[expl_obs ? expl_fnindex : 0] expl_prop; // latent-to-obs proportion
   array[g] vector[t]  exp_lobs; // expected obs by reference date (log)
   
+  //Expected ww conc model 
+  array[g] vector[expr_ft] exp_lww_conc; // expected ww concentration (log)
+  
   // Reference model
   // Parametric reference model
   vector[refp_fnrow] refp_mean;
@@ -239,6 +245,11 @@ transformed parameters{
     expr_lelatent_int, r, expr_g, expr_t, expr_r_seed, expr_gt_n, expr_lrgt,
     expr_ft, g
   );
+  
+  for(i in 1:g){
+    exp_lww_conc[i] = log_genomes_per_case + exp_llatent[i];
+  }
+  
   // Get latent-to-obs proportions and map expected latent cases to expected observations
   if (expl_obs) {
     expl_prop = combine_effects(
